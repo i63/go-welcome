@@ -67,13 +67,11 @@ func fetch (c *gin.Context){
 func thrash(c *gin.Context){
     var wg sync.WaitGroup
     start := time.Now()
-
     for i := 0; i <= 10; i++ {
         wg.Add(1)
         go sqrt(&wg)
     }
     wg.Wait()
-
     elapsed := time.Since(start)
     log.Printf("Runtime took %s", elapsed)
     c.String(200,"OK")
