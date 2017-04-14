@@ -45,6 +45,7 @@ func main(){
   app.GET("/healthz", healthz)
   app.GET("/cancer", cancer)
   app.GET("/dbtest",fetch)
+  app.GET("/thrash",thrash)
   app.Run(":8000")
 }
 /******************* End MAIN Function **************/
@@ -61,4 +62,19 @@ func fetch (c *gin.Context){
     db.QueryRow("SELECT * FROM customers").Scan(&cust.id,&cust.email)
     checkErr(err)
     c.JSON(200,gin.H{string(cust.id):cust.email})
+}
+
+func thrash(c *gin.Context){
+    var wg sync.WaitGroup
+    start := time.Now()
+
+    for i := 0; i <= 10; i++ {
+        wg.Add(1)
+        go sqrt(&wg)
+    }
+    wg.Wait()
+
+    elapsed := time.Since(start)
+    log.Printf("Runtime took %s", elapsed)
+    c.String(200,"OK")
 }
