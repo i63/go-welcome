@@ -12,7 +12,7 @@ var healthy = true
 func index (c *gin.Context){
     hostname,err := os.Hostname()
     checkErr(err)
-    c.String(200,hostname)
+    c.String(200,"v3 "+ hostname)
 }
 
 func healthz (c *gin.Context){
