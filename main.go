@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -19,11 +20,11 @@ func healthz(c *gin.Context) {
 }
 
 type InventoryItem struct {
-	id                 int
-	productID          string
-	productCost        int
-	productAvailabilty int
-	productSubcat      string
+	id                 int    `json:"id" binding:"required"`
+	productID          string `json:"productID" binding:"required"`
+	productCost        int    `json:"productCostid" binding:"required"`
+	productAvailabilty int    `json:"productAvailabilty" binding:"required"`
+	productSubcat      string `json:"productSubcat" binding:"required"`
 }
 
 func checkErr(err error) {
@@ -52,15 +53,14 @@ func fetch(c *gin.Context) {
 	db, err := sql.Open("mysql", connStr)
 	checkErr(err)
 	defer db.Close()
-	rows, err := db.Query("SELECT * FROM inventory")
+	rows, err := db.Query("SELECT id,product_id as productID,product_cost as productCost,product_availabilty as productAvailabilty,product_subcat as productSubcat FROM inventory;")
 	for rows.Next() {
-		rows.Scan(&invt.id, &invt.productID, &invt.productCost, &invt.productAvailabilty, &invt.productSubcat)
+		err = rows.Scan(&invt.id, &invt.productID, &invt.productCost, &invt.productAvailabilty, &invt.productSubcat)
+		checkErr(err)
 		inventory = append(inventory, invt)
 	}
-	defer rows.Close()
+
 	checkErr(err)
-	c.JSON(200, gin.H{
-		"result": inventory,
-		"count":  len(inventory),
-	})
+	defer rows.Close()
+	c.JSON(200, fmt.Sprintf("%+v", inventory))
 }
