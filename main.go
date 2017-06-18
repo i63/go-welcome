@@ -20,11 +20,11 @@ func healthz(c *gin.Context) {
 }
 
 type InventoryItem struct {
-	id                 int    `json:"id" binding:"required"`
-	productID          string `json:"productID" binding:"required"`
-	productCost        int    `json:"productCostid" binding:"required"`
-	productAvailabilty int    `json:"productAvailabilty" binding:"required"`
-	productSubcat      string `json:"productSubcat" binding:"required"`
+	id                 int    `json:"id"`
+	productID          string `json:"product_id"`
+	productCost        int    `json:"product_cost"`
+	productAvailabilty int    `json:"product_availabilty"`
+	productSubcat      string `json:"product_subcat"`
 }
 
 func checkErr(err error) {
