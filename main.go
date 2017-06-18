@@ -62,5 +62,8 @@ func fetch(c *gin.Context) {
 
 	checkErr(err)
 	defer rows.Close()
-	c.JSON(200, fmt.Sprintf("%+v", inventory))
+	c.JSON(200, gin.H{
+		"result": fmt.Sprintf("%+v", inventory),
+		"count":  len(inventory),
+	})
 }
